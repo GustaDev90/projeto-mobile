@@ -23,7 +23,7 @@ export default function Home() {
 
       <Searchbar
         placeholder="Pesquise seu jogo"
-        style={{ width: 350, alignSelf: "center" }}
+        style={styles.search}
       />
 
       <ScrollView
@@ -167,40 +167,69 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 20,
+    backgroundColor: "#05080D",
+    paddingTop: 0,
+  },
+
+  search: {
+    width: "90%",
+    maxWidth: 600,
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 10,
+    backgroundColor: "#fafafa",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#ffffff",
   },
 
   scroll: {
     flex: 1,
   },
 
-  homeContainer: {
-    alignItems: "center",
-    paddingHorizontal: 20,
-    paddingTop: 35,
-    paddingBottom: 30,
-  },
+ homeContainer: {
+  alignItems: "center",
+  paddingHorizontal: 30,
+  paddingTop: 30,
+  paddingBottom: 30,
+  width: "100%",
+  maxWidth: 1400,
+  alignSelf: "center",
+},
 
-  section: {
-    width: "100%",
-    marginBottom: 35,
-  },
+section: {
+  width: "100%",
+  marginBottom: 35,
+},
+
+search: {
+  width: "95%",
+  maxWidth: 900,
+  alignSelf: "center",
+  marginTop: 20,
+  marginBottom: 10,
+  backgroundColor: "#151D2B",
+  borderRadius: 12,
+  borderWidth: 1,
+  borderColor: "#ffffff",
+},
 
   sectionTitle: {
-    fontSize: 30,
-    fontWeight: "500",
+    fontSize: 28,
+    fontWeight: "700",
     fontFamily: "System",
     marginBottom: 20,
+    color: "#ffffff",
   },
 
   featuredCard: {
     width: "100%",
     borderWidth: 1,
-    borderColor: "#e5e5e5",
-    borderRadius: 12,
+    borderColor: "#26384D",
+    borderRadius: 16,
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#111827",
+    marginBottom: 20,
   },
 
   featuredImage: {
@@ -215,16 +244,18 @@ const styles = StyleSheet.create({
   },
 
   productTitle: {
-    fontSize: 26,
-    fontWeight: "500",
+    fontSize: 24,
+    fontWeight: "600",
     fontFamily: "System",
     lineHeight: 32,
+    color: "#F1F5F9",
   },
 
   developer: {
     fontSize: 16,
     marginTop: 10,
     fontFamily: "System",
+    color: "#CBD5E1",
   },
 
   bold: {
@@ -233,47 +264,54 @@ const styles = StyleSheet.create({
 
   price: {
     fontSize: 30,
+    fontWeight: "700",
     fontFamily: "System",
     marginTop: 15,
+    color: "#ffffff",
   },
 
   installments: {
     fontSize: 16,
     marginTop: 3,
     fontFamily: "System",
+    color: "#CBD5E1",
   },
 
   condition: {
     fontSize: 16,
     marginTop: 8,
     fontFamily: "System",
+    color: "#CBD5E1",
   },
 
   stock: {
     fontSize: 16,
     marginTop: 4,
-    color: "green",
+    color: "#4ADE80",
     fontFamily: "System",
   },
 
   button: {
     width: "100%",
     marginTop: 20,
+    borderRadius: 10,
   },
 
   productsGrid: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 12,
+    flexWrap: "wrap",
   },
 
   productCard: {
     flex: 1,
+    minWidth: 140,
     borderWidth: 1,
-    borderColor: "#e5e5e5",
-    borderRadius: 12,
+    borderColor: "#26384D",
+    borderRadius: 14,
     padding: 12,
-    backgroundColor: "#fff",
+    backgroundColor: "#111827",
   },
 
   productImage: {
@@ -285,31 +323,36 @@ const styles = StyleSheet.create({
 
   cardTitle: {
     fontSize: 18,
-    fontWeight: "500",
+    fontWeight: "600",
     fontFamily: "System",
     lineHeight: 23,
+    color: "#F1F5F9",
   },
 
   cardPrice: {
     fontSize: 22,
+    fontWeight: "700",
     marginTop: 10,
     fontFamily: "System",
+    color: "#ffffff",
   },
 
   cardStore: {
     fontSize: 15,
     marginTop: 5,
-    color: "#666",
+    color: "#94A3B8",
     fontFamily: "System",
   },
 
   smallButton: {
     width: "100%",
     marginTop: 15,
+    borderRadius: 8,
   },
 
   smallButtonText: {
     fontSize: 13,
+    color: "#FFFFFF",
   },
 
   categories: {
@@ -320,16 +363,17 @@ const styles = StyleSheet.create({
 
   category: {
     borderWidth: 1,
-    borderColor: "#e5e5e5",
+    borderColor: "#ffffff",
     borderRadius: 10,
     paddingVertical: 16,
     paddingHorizontal: 18,
-    backgroundColor: "#fff",
+    backgroundColor: "#111827",
   },
 
   categoryText: {
     fontSize: 17,
     fontFamily: "System",
+    color: "#ffffff",
   },
 
   bottomSpace: {
