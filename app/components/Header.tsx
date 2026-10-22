@@ -20,7 +20,12 @@ export default function Header({ menuAberto, setMenuAberto }) {
           </Text>
         </TouchableOpacity>
 
-        <Text style={styles.logo}>Diskômetro</Text>
+        
+        <Image
+  source={require("../../assets/images/DiskoMetro.png")}
+  style={styles.logo}
+  resizeMode="contain"
+/>
 
         <View style={styles.profilePic}>
           <TouchableOpacity  onPress={() => {
@@ -70,15 +75,16 @@ const styles = StyleSheet.create({
     elevation: 1000,
   },
 
-  header: {
-    width: "100%",
-    paddingHorizontal: 20,
-    paddingTop: 25,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "white",
-  },
+header: {
+  width: "100%",
+  paddingHorizontal: 20,
+  paddingTop: 10,
+  paddingBottom: 10,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  backgroundColor: "#05080D",
+},
 
   menuButton: {
     width: 44,
@@ -89,17 +95,17 @@ const styles = StyleSheet.create({
   },
 
   menuIcon: {
-    fontSize: 28,
-    fontWeight: "500",
-  },
+  fontSize: 28,
+  fontWeight: "500",
+  color: "#7DD3FC",
+},
 
-  logo: {
-    fontSize: 26,
-    fontWeight: "700",
-    fontFamily: "monospace",
-    paddingBottom: 20,
-    color: "monospace",
-  },
+
+logo: {
+  width: 260,
+  height: 120,
+},
+
 
   profile: {
     width: 44,
@@ -108,8 +114,8 @@ const styles = StyleSheet.create({
   },
 
   profilePic: {
-    paddingBottom: 20,
-  },
+  paddingBottom: 0,
+},
 
   menu: {
     position: "absolute",
