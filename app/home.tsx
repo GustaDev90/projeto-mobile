@@ -1,3 +1,4 @@
+import CarrosselJogos from "./components/CarroselJogos";
 import { useState } from "react";
 import {
   Image,
@@ -5,157 +6,218 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { Button } from "react-native-paper";
 import Header from "./components/Header";
 import { router } from "expo-router";
-import { Searchbar } from "react-native-paper";
+
+const imagemJogo =
+  "https://scale.coolshop-cdn.com/product-media.coolshop-cdn.com/23U6X8/c59051d30a9b48d48f98c793c83bb9b2.png/f/resident-evil-9-requiem.png";
 
 export default function Home() {
   const [menuAberto, setMenuAberto] = useState(false);
+  const [pesquisa, setPesquisa] = useState("");
+  const { width } = useWindowDimensions();
+
+  const desktop = width >= 800;
+
+  const produtos = [
+    {
+      id: "1",
+      nome: "Resident Evil Requiem",
+      preco: "R$ 279,90",
+      loja: "Amazon",
+      imagem: imagemJogo,
+    },
+    {
+      id: "2",
+      nome: "Resident Evil Requiem",
+      preco: "R$ 289,90",
+      loja: "Kabum",
+      imagem: imagemJogo,
+    },
+  ];
+
+  const produtosFiltrados = produtos.filter((produto) =>
+    produto.nome.toLowerCase().includes(pesquisa.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
       <Header
         menuAberto={menuAberto}
         setMenuAberto={setMenuAberto}
-      />
-
-      <Searchbar
-        placeholder="Pesquise seu jogo"
-        style={styles.search}
+        pesquisa={pesquisa}
+        setPesquisa={setPesquisa}
       />
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.homeContainer}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.homeContainer}
       >
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            Produto em destaque
-          </Text>
-
-          <View style={styles.featuredCard}>
+        <CarrosselJogos/>
+        {/* PRODUTO EM DESTAQUE */}
+        <View
+          style={[
+            styles.featuredCard,
+            desktop
+              ? styles.featuredDesktop
+              : styles.featuredMobile,
+          ]}
+        >
+          <View
+            style={[
+              styles.featuredVisual,
+              desktop
+                ? styles.featuredVisualDesktop
+                : styles.featuredVisualMobile,
+            ]}
+          >
             <Image
-              source={{
-                uri: "https://scale.coolshop-cdn.com/product-media.coolshop-cdn.com/23U6X8/c59051d30a9b48d48f98c793c83bb9b2.png/f/resident-evil-9-requiem.png",
-              }}
+              source={{ uri: imagemJogo }}
               style={styles.featuredImage}
+              resizeMode="contain"
             />
 
-            <View style={styles.featuredInfo}>
-              <Text style={styles.productTitle}>
-                Resident Evil Requiem - PS5
-              </Text>
 
-              <Text style={styles.price}>
-                R$ 279,90
-              </Text>
+            <Text style={styles.visualPlatform}>
+              PLAYSTATION 5
+            </Text>
+          </View>
 
-              <Text style={styles.cardStore}>
-                Amazon
-              </Text>
+          <View style={styles.featuredInfo}>
+            <Text style={styles.eyebrow}>
+              EM DESTAQUE · 01 / 03
+            </Text>
 
-              <Text style={styles.installments}>
-                em até 10x R$ 30,09
-              </Text>
+            <Text style={styles.productTitle}>
+              Resident Evil{" "} 
+              <Text style={styles.greenTitle}>Requiem</Text>
+            </Text>
+            
 
-              <Text style={styles.condition}>
-                Novo
-              </Text>
+            <View style={styles.tags}>
+              <Text style={styles.tag}>PS5</Text>
+              <Text style={styles.tag}>Mídia física</Text>
+            </View>
 
-              <Text style={styles.stock}>
-                Em estoque
-              </Text>
-
+            <View
+              style={[
+                styles.priceRow,
+                !desktop && styles.priceRowMobile,
+              ]}
+            >
               <Button
                 mode="contained"
-                buttonColor="black"
+                buttonColor="#191917"
+                textColor="#FFFFFF"
                 style={styles.button}
-                onPress={() => {
-                  router.push("/screens/product");
-                }}
+                contentStyle={styles.buttonContent}
+                onPress={() => router.push("/screens/product")}
               >
-                Ver produto
+                Ver produto ↗
               </Button>
+
+              <View>
+                <Text style={styles.from}>a partir de</Text>
+                <Text style={styles.price}>R$ 279,90</Text>
+              </View>
             </View>
+
+            <Text style={styles.cardStore}>
+              Disponível na Amazon
+            </Text>
           </View>
         </View>
 
+        {/* CONTROLE VISUAL DO DESTAQUE */}
+        <View style={styles.featuredControls}>
+          <View style={styles.progressTrack}>
+            <View style={styles.progress} />
+          </View>
+
+          <Text style={styles.counter}>01 / 03</Text>
+        </View>
+
+        {/* PRODUTOS RECOMENDADOS */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            Recomendado para você
-          </Text>
-
-          <View style={styles.productsGrid}>
-            <View style={styles.productCard}>
-              <Image
-                source={{
-                  uri: "https://scale.coolshop-cdn.com/product-media.coolshop-cdn.com/23U6X8/c59051d30a9b48d48f98c793c83bb9b2.png/f/resident-evil-9-requiem.png",
-                }}
-                style={styles.productImage}
-              />
-
-              <Text style={styles.cardTitle}>
-                Resident Evil Requiem
+          <View style={styles.sectionHeader}>
+            <View style={styles.sectionHeading}>
+              <Text style={styles.eyebrow}>
+                ESCOLHAS DA COMUNIDADE
               </Text>
 
-              <Text style={styles.cardPrice}>
-                R$ 279,90
+              <Text style={styles.sectionTitle}>
+                {pesquisa ? "Resultados da busca" : "Em destaque"}
               </Text>
 
-              <Text style={styles.cardStore}>
-                Amazon
+              <Text style={styles.sectionDescription}>
+                {pesquisa
+                  ? `${produtosFiltrados.length} produto(s) encontrado(s)`
+                  : "Alguns jogos para começar sua busca."}
               </Text>
-
-              <Button
-                mode="contained"
-                buttonColor="black"
-                style={styles.smallButton}
-                labelStyle={styles.smallButtonText}
-                onPress={() => {
-                  router.push("/screens/product");
-                }}
-              >
-                Ver produto
-              </Button>
-            </View>
-
-            <View style={styles.productCard}>
-              <Image
-                source={{
-                  uri: "https://scale.coolshop-cdn.com/product-media.coolshop-cdn.com/23U6X8/c59051d30a9b48d48f98c793c83bb9b2.png/f/resident-evil-9-requiem.png",
-                }}
-                style={styles.productImage}
-              />
-
-              <Text style={styles.cardTitle}>
-                Resident Evil Requiem
-              </Text>
-
-              <Text style={styles.cardPrice}>
-                R$ 289,90
-              </Text>
-
-              <Text style={styles.cardStore}>
-                Kabum
-              </Text>
-
-              <Button
-                mode="contained"
-                buttonColor="black"
-                style={styles.smallButton}
-                labelStyle={styles.smallButtonText}
-                onPress={() => {
-                  router.push("/screens/product");
-                }}
-              >
-                Ver produto
-              </Button>
             </View>
           </View>
+
+          <View style={styles.productsGrid}>
+            {produtosFiltrados.map((produto) => (
+              <View
+                key={produto.id}
+                style={[
+                  styles.productCard,
+                  {
+                    width: desktop ? "23.5%" : "47%",
+                  },
+                ]}
+              >
+                <View style={styles.productImageContainer}>
+                  <Image
+                    source={{ uri: produto.imagem }}
+                    style={styles.productImage}
+                    resizeMode="contain"
+                  />
+                </View>
+
+                <View style={styles.productInfo}>
+                  <Text style={styles.cardTitle}>
+                    {produto.nome}
+                  </Text>
+
+                  <Text style={styles.cardPlatform}>
+                    PS5 · Mídia física
+                  </Text>
+
+                  <Text style={styles.cardPrice}>
+                    {produto.preco}
+                  </Text>
+
+                  <Text style={styles.cardStore}>
+                    {produto.loja}
+                  </Text>
+
+                  <Button
+                    mode="contained"
+                    buttonColor="#191917"
+                    textColor="#FFFFFF"
+                    style={styles.smallButton}
+                    contentStyle={styles.smallButtonContent}
+                    labelStyle={styles.smallButtonText}
+                    onPress={() => router.push("/screens/product")}
+                  >
+                    Ver produto
+                  </Button>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          {produtosFiltrados.length === 0 && (
+            <Text style={styles.emptyText}>
+              Nenhum produto encontrado.
+            </Text>
+          )}
         </View>
 
         <View style={styles.bottomSpace} />
@@ -167,213 +229,297 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#05080D",
-    paddingTop: 0,
-  },
-
-  search: {
-    width: "90%",
-    maxWidth: 600,
-    alignSelf: "center",
-    marginTop: 20,
-    marginBottom: 10,
-    backgroundColor: "#fafafa",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ffffff",
+    backgroundColor: "#FFFFFF",
   },
 
   scroll: {
     flex: 1,
   },
 
- homeContainer: {
-  alignItems: "center",
-  paddingHorizontal: 30,
-  paddingTop: 30,
-  paddingBottom: 30,
-  width: "100%",
-  maxWidth: 1400,
-  alignSelf: "center",
-},
-
-section: {
-  width: "100%",
-  marginBottom: 35,
-},
-
-search: {
-  width: "95%",
-  maxWidth: 900,
-  alignSelf: "center",
-  marginTop: 20,
-  marginBottom: 10,
-  backgroundColor: "#151D2B",
-  borderRadius: 12,
-  borderWidth: 1,
-  borderColor: "#ffffff",
-},
-
-  sectionTitle: {
-    fontSize: 28,
-    fontWeight: "700",
-    fontFamily: "System",
-    marginBottom: 20,
-    color: "#ffffff",
+  homeContainer: {
+    width: "100%",
+    maxWidth: 1400,
+    alignSelf: "center",
+    paddingHorizontal: 24,
+    paddingTop: 34,
+    paddingBottom: 30,
   },
 
   featuredCard: {
     width: "100%",
-    borderWidth: 1,
-    borderColor: "#26384D",
-    borderRadius: 16,
-    padding: 20,
-    backgroundColor: "#111827",
-    marginBottom: 20,
+    overflow: "hidden",
+    borderRadius: 18,
+    backgroundColor: "#F4F4EF",
+  },
+
+  featuredDesktop: {
+    flexDirection: "row",
+    minHeight: 350,
+  },
+
+  featuredMobile: {
+    flexDirection: "column",
+  },
+
+  featuredVisual: {
+    backgroundColor: "#432D23",
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 18,
+  },
+
+  featuredVisualDesktop: {
+    width: "45%",
+    minHeight: 350,
+  },
+
+  featuredVisualMobile: {
+    width: "100%",
+    height: 240,
   },
 
   featuredImage: {
     width: "100%",
-    height: 280,
-    resizeMode: "contain",
-    marginBottom: 20,
+    height: "80%",
+  },
+
+  visualLabel: {
+    position: "absolute",
+    top: 18,
+    left: 18,
+    right: 18,
+    color: "#FFFFFF",
+    fontSize: 8,
+    fontWeight: "700",
+    letterSpacing: 1.5,
+  },
+
+  visualPlatform: {
+    position: "absolute",
+    bottom: 18,
+    left: 18,
+    color: "#FFFFFF",
+    fontSize: 8,
+    fontWeight: "700",
+    letterSpacing: 1.5,
   },
 
   featuredInfo: {
-    width: "100%",
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 30,
+    paddingVertical: 28,
+  },
+
+  eyebrow: {
+    color: "#85857A",
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 2,
   },
 
   productTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-    fontFamily: "System",
-    lineHeight: 32,
-    color: "#F1F5F9",
+    fontSize: 34,
+    lineHeight: 40,
+    fontWeight: "400",
+    color: "#252521",
+    marginTop: 14,
   },
 
-  developer: {
-    fontSize: 16,
-    marginTop: 10,
-    fontFamily: "System",
-    color: "#CBD5E1",
+  greenTitle: {
+    color: "#8a0808",
   },
 
-  bold: {
-    fontWeight: "700",
+  description: {
+    fontSize: 12,
+    lineHeight: 20,
+    color: "#85857B",
+    marginTop: 14,
+    marginBottom: 15,
   },
 
-  price: {
-    fontSize: 30,
-    fontWeight: "700",
-    fontFamily: "System",
-    marginTop: 15,
-    color: "#ffffff",
+  tags: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
   },
 
-  installments: {
-    fontSize: 16,
-    marginTop: 3,
-    fontFamily: "System",
-    color: "#CBD5E1",
+  tag: {
+    fontSize: 9,
+    color: "#73736A",
+    paddingHorizontal: 11,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: "#DFDFD7",
+    borderRadius: 18,
+    overflow: "hidden",
   },
 
-  condition: {
-    fontSize: 16,
-    marginTop: 8,
-    fontFamily: "System",
-    color: "#CBD5E1",
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 16,
+    marginTop: 22,
   },
 
-  stock: {
-    fontSize: 16,
-    marginTop: 4,
-    color: "#4ADE80",
-    fontFamily: "System",
+  priceRowMobile: {
+    alignItems: "flex-start",
   },
 
   button: {
+    borderRadius: 9,
+  },
+
+  buttonContent: {
+    minHeight: 40,
+    paddingHorizontal: 6,
+  },
+
+  from: {
+    fontSize: 9,
+    color: "#85857B",
+  },
+
+  price: {
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#252521",
+    marginTop: 3,
+  },
+
+  featuredControls: {
+    height: 62,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  progressTrack: {
+    height: 2,
+    width: 135,
+    backgroundColor: "#E7E7DF",
+  },
+
+  progress: {
+    width: "34%",
+    height: 2,
+    backgroundColor: "#92A443",
+  },
+
+  counter: {
+    fontSize: 10,
+    color: "#77776F",
+  },
+
+  section: {
+    borderTopWidth: 1,
+    borderTopColor: "#EEEEEA",
+    paddingTop: 34,
     width: "100%",
-    marginTop: 20,
-    borderRadius: 10,
+  },
+
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
+  sectionHeading: {
+    gap: 5,
+  },
+
+  sectionTitle: {
+    color: "#292925",
+    fontSize: 25,
+    fontWeight: "500",
+    marginTop: 8,
+  },
+
+  sectionDescription: {
+    color: "#88887F",
+    fontSize: 12,
+    marginTop: 3,
   },
 
   productsGrid: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
     flexWrap: "wrap",
+    justifyContent: "flex-start",
+    gap: 14,
   },
 
   productCard: {
-    flex: 1,
-    minWidth: 140,
+    flexGrow: 0,
+    borderRadius: 12,
+    overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#26384D",
-    borderRadius: 14,
-    padding: 12,
-    backgroundColor: "#111827",
+    borderColor: "#E9E9E2",
+    backgroundColor: "#FFFFFF",
+  },
+
+  productImageContainer: {
+    height: 180,
+    padding: 10,
+    backgroundColor: "#F2F2ED",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   productImage: {
     width: "100%",
-    height: 170,
-    resizeMode: "contain",
-    marginBottom: 12,
+    height: "100%",
+  },
+
+  productInfo: {
+    padding: 13,
   },
 
   cardTitle: {
-    fontSize: 18,
+    color: "#292925",
+    fontSize: 15,
     fontWeight: "600",
-    fontFamily: "System",
-    lineHeight: 23,
-    color: "#F1F5F9",
+    lineHeight: 21,
+  },
+
+  cardPlatform: {
+    color: "#88887F",
+    fontSize: 10,
+    marginTop: 7,
   },
 
   cardPrice: {
-    fontSize: 22,
+    color: "#292925",
+    fontSize: 20,
     fontWeight: "700",
-    marginTop: 10,
-    fontFamily: "System",
-    color: "#ffffff",
+    marginTop: 12,
   },
 
   cardStore: {
-    fontSize: 15,
+    color: "#88887F",
+    fontSize: 11,
     marginTop: 5,
-    color: "#94A3B8",
-    fontFamily: "System",
   },
 
   smallButton: {
-    width: "100%",
-    marginTop: 15,
+    marginTop: 12,
     borderRadius: 8,
   },
 
+  smallButtonContent: {
+    minHeight: 38,
+  },
+
   smallButtonText: {
-    fontSize: 13,
-    color: "#FFFFFF",
+    fontSize: 12,
   },
 
-  categories: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
-  },
-
-  category: {
-    borderWidth: 1,
-    borderColor: "#ffffff",
-    borderRadius: 10,
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-    backgroundColor: "#111827",
-  },
-
-  categoryText: {
-    fontSize: 17,
-    fontFamily: "System",
-    color: "#ffffff",
+  emptyText: {
+    color: "#77776F",
+    textAlign: "center",
+    paddingVertical: 30,
   },
 
   bottomSpace: {
