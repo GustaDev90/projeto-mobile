@@ -1,66 +1,151 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { useState } from "react";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "../components/Header";
 
 const marketplaces = [
   {
-    id: '1',
-    nome: 'Amazon',
+    id: "1",
+    nome: "Amazon",
+    descricao: "Jogos novos e usados",
     imagem: {
-      uri: 'https://static.vecteezy.com/system/resources/previews/019/766/240/non_2x/amazon-logo-amazon-icon-transparent-free-png.png',
+      uri: "https://static.vecteezy.com/system/resources/previews/019/766/240/non_2x/amazon-logo-amazon-icon-transparent-free-png.png",
     },
   },
   {
-    id: '2',
-    nome: 'Mercado Livre',
+    id: "2",
+    nome: "Mercado Livre",
+    descricao: "Ofertas de vendedores",
     imagem: {
-      uri: 'https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png',
+      uri: "https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png",
     },
   },
   {
-    id: '3',
-    nome: 'Shopee',
+    id: "3",
+    nome: "Casas Bahia",
+    descricao: "Produtos e promoções",
     imagem: {
-      uri: 'https://blog.caviarcriativo.com/wp-content/uploads/2025/11/Shopee-Png-Download.png',
+      uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_slBJcDuC15d0nXnrwUHfYMwQUOSvoJlvj8z5mFfTcmqGcAtaFXUHDco&s=10",
     },
   },
   {
-    id: '4',
-    nome: 'OLX',
+    id: "4",
+    nome: "OLX",
+    descricao: "Produtos de segunda mão",
     imagem: {
-      uri: 'https://logopng.com.br/logos/olx-104.png',
+      uri: "https://logopng.com.br/logos/olx-104.png",
     },
   },
   {
-    id: '5',
-    nome: 'AliExpress',
+    id: "5",
+    nome: "Magalu",
+    descricao: "Ofertas internacionais",
     imagem: {
-      uri: 'https://download.logo.wine/logo/AliExpress/AliExpress-Logo.wine.png',
+      uri: "https://download.logo.wine/logo/AliExpress/AliExpress-Logo.wine.png",
     },
   },
 ];
 
 export default function Marketplaces() {
+  const [menuAberto, setMenuAberto] = useState(false);
+  const [pesquisa, setPesquisa] = useState("");
+  const { width } = useWindowDimensions();
+
+  const colunas = width >= 1000 ? 3 : width >= 600 ? 2 : 1;
+
+  const filtrados = marketplaces.filter((item) =>
+    item.nome.toLowerCase().includes(pesquisa.toLowerCase())
+  );
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.titulo}>Marketplaces disponíveis no Diskômetro</Text>
+    <SafeAreaView style={styles.container} edges={["top"]}>
+      <Header
+        menuAberto={menuAberto}
+        setMenuAberto={setMenuAberto}
+        pesquisa={pesquisa}
+        setPesquisa={setPesquisa}
+      />
 
       <FlatList
-        data={marketplaces}
+        key={colunas}
+        data={filtrados}
         keyExtractor={(item) => item.id}
-        numColumns={2}
-        columnWrapperStyle={styles.linha}
+        numColumns={colunas}
         contentContainerStyle={styles.lista}
+        columnWrapperStyle={
+          colunas > 1 ? styles.linha : undefined
+        }
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={
+          <View style={styles.introducao}>
+            <Text style={styles.eyebrow}>
+              COMPRE COMPARANDO
+            </Text>
+
+            <Text style={styles.titulo}>
+              Nossos{" "}
+              <Text style={styles.tituloVerde}>marketplaces</Text>
+            </Text>
+
+            <Text style={styles.subtitulo}>
+              Explore as lojas disponíveis e encontre opções para
+              comparar preços de jogos físicos em um só lugar.
+            </Text>
+
+            <View style={styles.contagem}>
+              <View style={styles.pontoVerde} />
+              <Text style={styles.contagemTexto}>
+                {filtrados.length} lojas disponíveis
+              </Text>
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          <Text style={styles.vazio}>
+            Nenhum marketplace encontrado.
+          </Text>
+        }
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <View style={styles.imagem}>
-              <Image
-                source={item.imagem}
-                style={styles.logo}
-                resizeMode="contain"
-              />
+            <View style={styles.cardTopo}>
+              <View style={styles.imagem}>
+                <Image
+                  source={item.imagem}
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+              </View>
+
+              <View style={styles.selo}>
+                <Text style={styles.seloTexto}>LOJA</Text>
+              </View>
             </View>
 
-            <Text style={styles.nome}>{item.nome}</Text>
+            <View style={styles.cardInfo}>
+              <Text style={styles.nome}>
+                {item.nome}
+              </Text>
+
+              <Text style={styles.descricao}>
+                {item.descricao}
+              </Text>
+
+              <View style={styles.cardRodape}>
+                <Text style={styles.cardRodapeTexto}>
+                  Marketplace
+                </Text>
+
+                <Text style={styles.seta}>↗</Text>
+              </View>
+            </View>
           </View>
         )}
       />
@@ -71,49 +156,163 @@ export default function Marketplaces() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-
-  titulo: {
-    fontSize: 22,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginVertical: 20,
+    backgroundColor: "#FFFFFF",
   },
 
   lista: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+    width: "100%",
+    maxWidth: 1120,
+    alignSelf: "center",
+    paddingHorizontal: 24,
+    paddingTop: 36,
+    paddingBottom: 40,
+  },
+
+  introducao: {
+    marginBottom: 28,
+  },
+
+  eyebrow: {
+    fontSize: 9,
+    fontWeight: "700",
+    letterSpacing: 2,
+    color: "#85857B",
+  },
+
+  titulo: {
+    fontSize: 32,
+    lineHeight: 40,
+    fontWeight: "500",
+    color: "#282823",
+    marginTop: 10,
+  },
+
+  tituloVerde: {
+    color: "#899B43",
+  },
+
+  subtitulo: {
+    maxWidth: 550,
+    fontSize: 13,
+    lineHeight: 21,
+    color: "#85857B",
+    marginTop: 10,
+  },
+
+  contagem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 20,
+  },
+
+  pontoVerde: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: "#899B43",
+  },
+
+  contagemTexto: {
+    color: "#77776F",
+    fontSize: 11,
   },
 
   linha: {
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    gap: 16,
+    marginBottom: 16,
   },
 
   card: {
-    width: '48%',
-    alignItems: 'center',
+    flex: 1,
+    minWidth: 0,
+    marginBottom: 16,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#E9E9E2",
+    backgroundColor: "#FFFFFF",
+    overflow: "hidden",
+  },
+
+  cardTopo: {
+    height: 175,
+    backgroundColor: "#F3F3ED",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
   },
 
   imagem: {
-    width: '100%',
-    aspectRatio: 0.85,
-    borderRadius: 8,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   logo: {
-    width: '80%',
-    height: '70%',
+    width: "85%",
+    height: "85%",
+  },
+
+  selo: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#DFDFD6",
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+
+  seloTexto: {
+    fontSize: 8,
+    letterSpacing: 1,
+    color: "#77776F",
+    fontWeight: "700",
+  },
+
+  cardInfo: {
+    padding: 16,
   },
 
   nome: {
-    fontSize: 13,
-    fontWeight: '500',
-    letterSpacing: 1,
+    fontSize: 17,
+    fontWeight: "600",
+    color: "#292925",
+  },
+
+  descricao: {
+    fontSize: 11,
+    lineHeight: 17,
+    color: "#85857B",
+    marginTop: 6,
+  },
+
+  cardRodape: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 17,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: "#EEEEEA",
+  },
+
+  cardRodapeTexto: {
+    fontSize: 10,
+    color: "#77776F",
+  },
+
+  seta: {
+    fontSize: 17,
+    color: "#899B43",
+  },
+
+  vazio: {
+    paddingVertical: 30,
+    textAlign: "center",
+    color: "#77776F",
   },
 });
